@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.EnumType;
@@ -16,8 +17,8 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Document(collection = "car")
+@SuperBuilder
 public class Car extends Vehicle {
 
     @Enumerated(EnumType.STRING)

@@ -1,40 +1,34 @@
-package com.example.rentACar.dto.request;
+package com.example.rentACar.dto.response;
 
 import com.example.rentACar.dto.enums.CarBrand;
 import com.example.rentACar.dto.enums.CarFuelType;
 import com.example.rentACar.dto.enums.CarGearType;
 import com.example.rentACar.entity.Car;
 import com.sun.istack.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Getter
-public class SaveCarRequest {
-    @NotNull
+@Builder
+public class SaveCarResponse {
     private CarBrand carBrand;
-    @NotBlank
     private String model;
-    @NotNull
     private CarGearType gear;
-    @NotNull
     private CarFuelType fuelType;
-    @NotBlank
     private Integer km;
-    @NotNull
     private Integer year;
     private String color;
-    @NotNull
     private Double dailyRentalPrice;
-    private List<String> image;
+    private List<String> images;
     private String description;
-    @NotNull
     private String ownerId;
 
 
-    public static Car saveCarRequestToCar(SaveCarRequest request){
-        return Car.builder()
+    public static SaveCarResponse carToSaveCarResponse(Car request){
+        return SaveCarResponse.builder()
                 .carBrand(request.getCarBrand())
                 .model(request.getModel())
                 .gear(request.getGear())
@@ -43,8 +37,9 @@ public class SaveCarRequest {
                 .year(request.getYear())
                 .color(request.getColor())
                 .dailyRentalPrice(request.getDailyRentalPrice())
-                .images(request.getImage())
+                .images(request.getImages())
                 .description(request.getDescription())
+                .ownerId(request.getOwnerId())
                 .build();
     }
 }

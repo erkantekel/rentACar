@@ -1,14 +1,19 @@
 package com.example.rentACar.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.MappedSuperclass;
 import java.util.List;
 
-@MappedSuperclass
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 public abstract class Vehicle extends BaseEntity {
 
     private Integer year;
