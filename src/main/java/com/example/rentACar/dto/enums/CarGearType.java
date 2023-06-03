@@ -11,6 +11,11 @@ public enum CarGearType {
     CarGearType(String description) {
         this.description =description;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
     public static CarGearType valueOfLabel(String description){
         for (CarGearType carGearType : values()){
             if (carGearType.description.equalsIgnoreCase(description)){

@@ -13,7 +13,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class SaveCarResponse {
+public class GetCarsResponse {
     private String carBrand;
     private String model;
     private String gear;
@@ -27,8 +27,8 @@ public class SaveCarResponse {
     private String ownerId;
 
 
-    public static SaveCarResponse carToSaveCarResponse(Car request){
-        return SaveCarResponse.builder()
+    public static GetCarsResponse carToGetCarsResponse(Car request){
+        return GetCarsResponse.builder()
                 .carBrand(request.getCarBrand().getDescription())
                 .model(request.getModel())
                 .gear(request.getGear().getDescription())

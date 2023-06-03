@@ -13,13 +13,13 @@ import java.util.List;
 @Getter
 public class SaveCarRequest {
     @NotNull
-    private CarBrand carBrand;
+    private String carBrand;
     @NotBlank
     private String model;
     @NotNull
-    private CarGearType gear;
+    private String gear;
     @NotNull
-    private CarFuelType fuelType;
+    private String fuelType;
     @NotBlank
     private Integer km;
     @NotNull
@@ -35,10 +35,10 @@ public class SaveCarRequest {
 
     public static Car saveCarRequestToCar(SaveCarRequest request){
         return Car.builder()
-                .carBrand(request.getCarBrand())
+                .carBrand(CarBrand.valueOfLabel(request.getCarBrand()))
                 .model(request.getModel())
-                .gear(request.getGear())
-                .fuelType(request.getFuelType())
+                .gear(CarGearType.valueOfLabel(request.getGear()))
+                .fuelType(CarFuelType.valueOfLabel(request.getFuelType()))
                 .km(request.getKm())
                 .year(request.getYear())
                 .color(request.getColor())
