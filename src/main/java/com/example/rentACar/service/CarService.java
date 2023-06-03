@@ -1,11 +1,13 @@
 package com.example.rentACar.service;
 
 import com.example.rentACar.dto.enums.CarBrand;
+import com.example.rentACar.dto.enums.ErrorCode;
 import com.example.rentACar.dto.request.GetCarsRequest;
 import com.example.rentACar.dto.request.SaveCarRequest;
 import com.example.rentACar.dto.response.GetCarsResponse;
 import com.example.rentACar.dto.response.SaveCarResponse;
 import com.example.rentACar.entity.Car;
+import com.example.rentACar.exception.GenericException;
 import com.example.rentACar.repository.CarRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,10 +17,13 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,15 +62,26 @@ public class CarService {
         }
         if (Objects.nonNull(request.getMaxRentalPrice()) && Objects.nonNull(request.getMinRentalPrice())) {
             criteria = criteria.andOperator(
-                    Criteria.where("dailyRentalPrice").lt(request.getMaxRentalPrice()),
-                    Criteria.where("dailyRentalPrice").gt(request.getMinRentalPrice())
+                    Criteria.where("dailyRentalPrice").lte(request.getMaxRentalPrice()),
+                    Criteria.where("dailyRentalPrice").gte(request.getMinRentalPrice())
             );
         } else if (Objects.nonNull(request.getMaxRentalPrice())) {
-            criteria = criteria.and("dailyRentalPrice").lt(request.getMaxRentalPrice());
+            criteria = criteria.and("dailyRentalPrice").lte(request.getMaxRentalPrice());
         } else if (Objects.nonNull(request.getMinRentalPrice())) {
-            criteria = criteria.and("dailyRentalPrice").gt(request.getMinRentalPrice());
+            criteria = criteria.and("dailyRentalPrice").gte(request.getMinRentalPrice());
         }
         return criteria;
     }
 
+    public void deleteCar(String carId) {
+        Optional<Car> optionalCar = carRepository.findById(carId);
+        if (optionalCar.isPresent()) {
+            Car car = optionalCar.get();
+            // Aracın kiralama bilgilerini kontrol etme veya başka işlemler ekleme
+
+            carRepository.delete(car);
+        } else {
+            throw GenericException.builder().httpStatus(HttpStatus.NOT_FOUND).errorCode(ErrorCode.CAR_NOT_FOUND).errorMessage("Car not found with id:" + carId).build();
+        }
+    }
 }

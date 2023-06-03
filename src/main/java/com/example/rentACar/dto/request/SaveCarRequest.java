@@ -9,6 +9,7 @@ import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 public class SaveCarRequest {
@@ -45,6 +46,8 @@ public class SaveCarRequest {
                 .dailyRentalPrice(request.getDailyRentalPrice())
                 .images(request.getImage())
                 .description(request.getDescription())
+                .ownerId(request.getOwnerId())
+                .id(UUID.randomUUID().toString())
                 .build();
     }
 }

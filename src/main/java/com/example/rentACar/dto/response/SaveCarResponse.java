@@ -25,6 +25,7 @@ public class SaveCarResponse {
     private List<String> images;
     private String description;
     private String ownerId;
+    private String id;
 
 
     public static SaveCarResponse carToSaveCarResponse(Car request){
@@ -40,6 +41,7 @@ public class SaveCarResponse {
                 .images(request.getImages())
                 .description(request.getDescription())
                 .ownerId(request.getOwnerId())
+                .id(request.getId())
                 .build();
     }
 }

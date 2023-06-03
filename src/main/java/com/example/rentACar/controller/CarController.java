@@ -11,10 +11,12 @@ import com.example.rentACar.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.NoSuchElementException;
 
 @RequestMapping("/api/v1/car")
 @RestController
@@ -24,7 +26,7 @@ public class CarController {
     private final CarService carService;
 
     @PostMapping("/save")
-    public ResponseEntity<SaveCarResponse> saveCar (@RequestBody @Valid SaveCarRequest request){
+    public ResponseEntity<SaveCarResponse> saveCar(@RequestBody @Valid SaveCarRequest request) {
         return ResponseEntity.ok(carService.saveCar(request));
     }
 
@@ -38,7 +40,7 @@ public class CarController {
             @RequestParam(required = false) Double minRentalPrice,
             @RequestParam(required = false) String sortField,
             @RequestParam(required = false) String sortDirection
-    ){
+    ) {
         Pageable pageable;
         Sort.Direction direction = Sort.Direction.ASC;
         if (("DESC").equalsIgnoreCase(sortDirection)) {
@@ -51,7 +53,7 @@ public class CarController {
             } catch (IllegalArgumentException e) {
                 pageable = PageRequest.of(page, size);
             }
-        }else{
+        } else {
             pageable = PageRequest.of(page, size);
 
         }
@@ -62,7 +64,15 @@ public class CarController {
                 .carBrand(carBrand)
                 .model(model)
                 .build();
-        return ResponseEntity.ok(carService.getCars(request,pageable));
+        return ResponseEntity.ok(carService.getCars(request, pageable));
+    }
+
+    @DeleteMapping("/{carId}")
+    public ResponseEntity<String> deleteCar(@PathVariable String carId) {
+
+        carService.deleteCar(carId);
+        return ResponseEntity.ok("Car deleted successfully");
+
     }
 
 }

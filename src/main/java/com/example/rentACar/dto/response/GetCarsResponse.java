@@ -14,6 +14,7 @@ import java.util.List;
 @Getter
 @Builder
 public class GetCarsResponse {
+    private String id;
     private String carBrand;
     private String model;
     private String gear;
@@ -40,6 +41,7 @@ public class GetCarsResponse {
                 .images(request.getImages())
                 .description(request.getDescription())
                 .ownerId(request.getOwnerId())
+                .id(request.getId())
                 .build();
     }
 }
