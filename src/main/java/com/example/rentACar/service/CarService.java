@@ -1,11 +1,10 @@
 package com.example.rentACar.service;
 
-import com.example.rentACar.dto.enums.CarBrand;
 import com.example.rentACar.dto.enums.ErrorCode;
 import com.example.rentACar.dto.request.GetCarsRequest;
 import com.example.rentACar.dto.request.SaveCarRequest;
+import com.example.rentACar.dto.request.UpdateCarRequest;
 import com.example.rentACar.dto.response.GetCarsResponse;
-import com.example.rentACar.dto.response.SaveCarResponse;
 import com.example.rentACar.entity.Car;
 import com.example.rentACar.exception.GenericException;
 import com.example.rentACar.repository.CarRepository;
@@ -13,15 +12,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,9 +30,9 @@ public class CarService {
     private final CarRepository carRepository;
     private final MongoTemplate mongoTemplate;
 
-    public SaveCarResponse saveCar(SaveCarRequest request) {
+    public GetCarsResponse saveCar(SaveCarRequest request) {
         Car car = SaveCarRequest.saveCarRequestToCar(request);
-        return SaveCarResponse.carToSaveCarResponse(carRepository.save(car));
+        return GetCarsResponse.carToGetCarsResponse(carRepository.save(car));
     }
 
     public Page<GetCarsResponse> getCars(GetCarsRequest request, Pageable pageable) {
@@ -84,4 +82,27 @@ public class CarService {
             throw GenericException.builder().httpStatus(HttpStatus.NOT_FOUND).errorCode(ErrorCode.CAR_NOT_FOUND).errorMessage("Car not found with id:" + carId).build();
         }
     }
+
+    @Transactional()
+    public GetCarsResponse updateCar(UpdateCarRequest updateRequest) {
+        final String id = updateRequest.getId();
+        final Car car = carRepository.findById(id).orElseThrow(() -> GenericException.builder().errorCode(ErrorCode.CAR_NOT_FOUND).build());
+
+        updateCarFields(updateRequest, car);
+        carRepository.save(car);
+
+        return GetCarsResponse.carToGetCarsResponse(car);
+    }
+
+    private void updateCarFields(UpdateCarRequest request, Car car) {
+        car.setKm(getOrDefault(request.getKm(), car.getKm()));
+        car.setDailyRentalPrice(getOrDefault(request.getDailyRentalPrice(), car.getDailyRentalPrice()));
+        car.setDescription(getOrDefault(request.getDescription(), car.getDescription()));
+        car.setImages(getOrDefault(request.getImages(), car.getImages()));
+    }
+
+    private  <T> T getOrDefault(T data, T defaultValue) {
+        return Objects.isNull(data) ? defaultValue : data;
+    }
 }
+

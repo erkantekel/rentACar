@@ -1,22 +1,21 @@
 package com.example.rentACar.controller;
 
+import com.example.rentACar.dto.request.UpdateCarRequest;
+import com.example.rentACar.entity.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import com.example.rentACar.dto.request.GetCarsRequest;
 import com.example.rentACar.dto.request.SaveCarRequest;
 import com.example.rentACar.dto.response.GetCarsResponse;
-import com.example.rentACar.dto.response.SaveCarResponse;
 import com.example.rentACar.service.CarService;
 import com.example.rentACar.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.NoSuchElementException;
 
 @RequestMapping("/api/v1/car")
 @RestController
@@ -26,7 +25,8 @@ public class CarController {
     private final CarService carService;
 
     @PostMapping("/save")
-    public ResponseEntity<SaveCarResponse> saveCar(@RequestBody @Valid SaveCarRequest request) {
+    public ResponseEntity<GetCarsResponse> saveCar(@RequestBody @Valid SaveCarRequest request) {
+        userService.findUserByUsername(request.getOwnerId());
         return ResponseEntity.ok(carService.saveCar(request));
     }
 
@@ -67,13 +67,18 @@ public class CarController {
         return ResponseEntity.ok(carService.getCars(request, pageable));
     }
 
-    @DeleteMapping("/{carId}")
+    @DeleteMapping("/delete/{carId}")
     public ResponseEntity<String> deleteCar(@PathVariable String carId) {
-
         carService.deleteCar(carId);
         return ResponseEntity.ok("Car deleted successfully");
-
     }
 
+    @PutMapping("/update/{id}")
+    public ResponseEntity<GetCarsResponse> updateCar(@PathVariable String id, @RequestBody UpdateCarRequest updateRequest) {
+        updateRequest.setId(id);
+        GetCarsResponse response = carService.updateCar(updateRequest);
+        return ResponseEntity.ok(response);
+
+    }
 }
 

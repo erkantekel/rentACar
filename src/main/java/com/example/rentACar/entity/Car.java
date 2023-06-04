@@ -4,10 +4,7 @@ import com.example.rentACar.dto.enums.CarBrand;
 import com.example.rentACar.dto.enums.CarFuelType;
 import com.example.rentACar.dto.enums.CarGearType;
 import com.mongodb.lang.Nullable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -18,6 +15,7 @@ import javax.validation.constraints.Positive;
 import java.util.List;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "car")
