@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -23,7 +24,7 @@ public abstract class Vehicle extends BaseEntity {
 
     private String color;
 
-    private List<RentalInfo> rentalInfos;
+    private List<RentalInfo> rentalInfos = new ArrayList<>();
 
     @Positive
     private Double dailyRentalPrice;

@@ -75,7 +75,6 @@ public class CarService {
         Optional<Car> optionalCar = carRepository.findById(carId);
         if (optionalCar.isPresent()) {
             Car car = optionalCar.get();
-            // Aracın kiralama bilgilerini kontrol etme veya başka işlemler ekleme
 
             carRepository.delete(car);
         } else {
@@ -95,14 +94,11 @@ public class CarService {
     }
 
     private void updateCarFields(UpdateCarRequest request, Car car) {
-        car.setKm(getOrDefault(request.getKm(), car.getKm()));
-        car.setDailyRentalPrice(getOrDefault(request.getDailyRentalPrice(), car.getDailyRentalPrice()));
-        car.setDescription(getOrDefault(request.getDescription(), car.getDescription()));
-        car.setImages(getOrDefault(request.getImages(), car.getImages()));
+        Optional.ofNullable(request.getKm()).ifPresent(car::setKm);
+        Optional.ofNullable(request.getDailyRentalPrice()).ifPresent(car::setDailyRentalPrice);
+        Optional.ofNullable(request.getDescription()).ifPresent(car::setDescription);
+        Optional.ofNullable(request.getImages()).ifPresent(car::setImages);
     }
 
-    private  <T> T getOrDefault(T data, T defaultValue) {
-        return Objects.isNull(data) ? defaultValue : data;
-    }
 }
 

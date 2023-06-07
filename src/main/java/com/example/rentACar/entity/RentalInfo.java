@@ -13,6 +13,6 @@ import java.time.LocalDate;
 public class RentalInfo {
     private LocalDate startDate;
     private LocalDate endDate;
-    private String userId;
+    private String userName;
 
 }
